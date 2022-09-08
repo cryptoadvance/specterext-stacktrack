@@ -1,0 +1,8 @@
+{% extends "stacktrack/base.jinja" %}
+{% block main %}
+    <img src="{{ url_for(service.id +'_endpoint' + '.static', filename=service.logo) }}" width="300"/>    
+    {% from 'stacktrack/components/stacktrack_menu.jinja' import stacktrack_menu with context %}
+    {{ stacktrack_menu(tab) }}
+    {% block content %}
+    {% endblock %}
+{% endblock %}

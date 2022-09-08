@@ -1,0 +1,5 @@
+recursive-include src/wombat6/specterext/stacktrack/templates *
+recursive-include src/wombat6/specterext/stacktrack/static *
+recursive-include src/wombat6/specterext/stacktrack/*/LC_MESSAGES *.mo
+recursive-include src/wombat6/specterext/stacktrack/translations/*/LC_MESSAGES *.po
+include requirements.txt
