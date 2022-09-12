@@ -1,9 +1,7 @@
-from decimal import *
 import logging
 
 from flask import current_app as app
 from flask_apscheduler import APScheduler
-import pandas as pd
 
 from cryptoadvance.specter.services.service import Service, devstatus_alpha, devstatus_prod, devstatus_beta
 # A SpecterError can be raised and will be shown to the user as a red banner
@@ -30,8 +28,6 @@ class StacktrackService(Service):
     # ServiceEncryptedStorage field names for this service
     # Those will end up as keys in a json-file
     SPECTER_WALLET_ALIAS = "wallet"
-
-    SATS_PER_BTC = 100_000_000
 
     def callback_after_serverpy_init_app(self, scheduler: APScheduler):
         def every5seconds(hello, world="world"):
@@ -75,33 +71,3 @@ class StacktrackService(Service):
     def set_associated_wallet(cls, wallet: Wallet):
         """Set the Specter `Wallet` that is currently associated with this Service"""
         cls.update_current_user_service_data({cls.SPECTER_WALLET_ALIAS: wallet.alias})
-
-    @classmethod
-    def build_balance_df(cls, wallet: Wallet) -> pd.DataFrame:
-        data = {
-            "timestamp": [],
-            "sats": [],
-        }
-
-        # TODO Sort this by date, instead of assuming it's in a certain order.
-        txlist = reversed(wallet.txlist())
-
-        for tx in txlist:
-            time = tx["time"]
-            category = tx["category"]
-
-            # FIXME Figure out how to get the exact sat count here, without improper rounding
-            amount = tx["amount"] * cls.SATS_PER_BTC
-
-            if category == "send":
-                amount = -amount
-            data["timestamp"].append(pd.Timestamp(time, unit="s", tz="UTC"))
-            data["sats"].append(amount)
-
-        df = pd.DataFrame(data)
-
-        df["date"] = df["timestamp"].dt.date
-        df["btc"] = df["sats"] / cls.SATS_PER_BTC
-        df["cum_btc"] = df["sats"].cumsum() / cls.SATS_PER_BTC
-
-        return df[["date", "btc", "cum_btc"]]

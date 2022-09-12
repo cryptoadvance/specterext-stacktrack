@@ -1,20 +1,16 @@
 import logging
 
 import pandas as pd
-from flask import redirect, render_template, request, url_for, flash
+from flask import redirect, render_template, request, url_for
 from flask import current_app as app
 from flask_login import login_required, current_user
-
 import plotly.graph_objects as go
-from plotly.offline import plot
-from plotly.graph_objs import Scatter
-
-import plotly.express as px
 
 from cryptoadvance.specter.specter import Specter
 from cryptoadvance.specter.services.controller import user_secret_decrypted_required
-from cryptoadvance.specter.user import User
 from cryptoadvance.specter.wallet import Wallet
+
+from .plots import Plots
 from .service import StacktrackService
 
 
@@ -44,39 +40,9 @@ def index():
 @login_required
 @user_secret_decrypted_required
 def transactions():
-    # The wallet currently configured for ongoing auto-withdrawals
     wallet: Wallet = StacktrackService.get_associated_wallet()
-    balance_df: pd.DataFrame = StacktrackService.build_balance_df(wallet)
-
-    # fig = px.line(df, x="year", y="lifeExp", color="country", template="plotly_dark")
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=balance_df["date"],
-        y=balance_df["cum_btc"],
-        name="BTC balance",
-        mode="lines",
-        line_shape="hv",
-    ))
-    fig.add_trace(go.Bar(
-        x=balance_df["date"],
-        y=balance_df["btc"],
-        name="BTC",
-        marker={
-            "color": "green",
-        },
-    ))
-    fig.update_layout(
-        title_text=f"Wallet balance: {wallet.name}",
-        title_x=0.5,
-        xaxis_title="Date",
-        template="plotly_dark",
-        width=800,
-        height=400,
-        paper_bgcolor="#11181F",
-        plot_bgcolor="#11181F",
-    )
-    balance_plot = plot(fig, output_type="div")
-
+    tx_df: pd.DataFrame = Plots.build_tx_df(wallet)
+    balance_plot: go.Figure = Plots.build_plot(tx_df, f"Wallet balance: {wallet.name}")
     return render_template(
         "stacktrack/transactions.jinja",
         wallet=wallet,
