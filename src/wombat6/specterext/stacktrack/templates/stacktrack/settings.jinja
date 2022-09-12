@@ -63,15 +63,8 @@
     </style>
 
     <div class="card">
-        <h1>{{ _("Configure your extension") }}</h1>
+        <h1>{{ _("Configure StackTrack") }}</h1>
         <br>
-
-        <div class="note">
-            {{ _("- Maybe you want to put some notes for the user") }}<br/>
-            {{ _("- One important setting is whether your extension gets a menu-point on the left") }}<br/>
-            {{ _("- Let us assume you want the user to use a specific wallet. That should go here. ") }}<br/>
-        </div>
-        <br/>
 
         <form action="{{ url_for(service.get_blueprint_name() + '.settings_post') }}" method="POST" role="form">
             <input type="hidden" class="csrf-token" name="csrf_token" value="{{ csrf_token() }}"/>

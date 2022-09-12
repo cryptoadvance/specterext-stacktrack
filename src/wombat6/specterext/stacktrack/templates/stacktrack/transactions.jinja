@@ -2,7 +2,6 @@
 {% block title %}Transactions{% endblock %}
 {% set tab = 'transactions' %}
 {% block content %}
-
     <style>
         h1 {
             margin-top: 1em;
@@ -25,6 +24,20 @@
         .balance_chart {
             margin-top: 3em;
         }
+        .balance_chart nav.date_ranges {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #FFF;
+        }
+        .balance_chart nav.date_ranges a {
+            margin: 0 2px;
+            padding: 5px 8px 4px 7px;
+            border: 1px solid #456;
+            border-radius: 5px;
+            background-color: #234;
+            color: #FFF;
+            text-decoration: none;
+        }
         .table-holder {
             margin-top: 3em;
         }
@@ -36,7 +49,6 @@
         }
     </style>
 
-    {# <h1>StackTrack Transactions</h1> #}
     {% if wallet %}
         {#
         <div class="linked_wallet">Linked wallet:
@@ -44,6 +56,13 @@
         </div>
         #}
         <div class="balance_chart">
+            <nav class="date_ranges">
+                <a href="#">1D</a>
+                <a href="#">1W</a>
+                <a href="#">1M</a>
+                <a href="#">1Y</a>
+                <a href="#">All</a>
+            </nav>
             {{ plot | safe }}
         </div>
     {% else %}

@@ -41,25 +41,29 @@ class Plots:
     @classmethod
     def build_plot(cls, tx_df: pd.DataFrame, title: str) -> go.Figure:
         fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=tx_df["date"],
-            y=tx_df["cum_btc"],
-            name="BTC balance",
-            mode="lines",
-            line_shape="hv",
-        ))
         fig.add_trace(go.Bar(
             x=tx_df["date"],
             y=tx_df["btc"],
-            name="BTC",
+            name="Daily",
             marker={
-                "color": "green",
+                "color": "Green",
+            },
+        ))
+        fig.add_trace(go.Scatter(
+            x=tx_df["date"],
+            y=tx_df["cum_btc"],
+            name="Cumulative",
+            mode="lines",
+            line_shape="hv",
+            marker={
+                "color": "Gold",
             },
         ))
         fig.update_layout(
             title_text=title,
             title_x=0.5,
-            xaxis_title="Date",
+            # xaxis_title="Date",
+            yaxis_title="BTC",
             template="plotly_dark",
             width=800,
             height=400,

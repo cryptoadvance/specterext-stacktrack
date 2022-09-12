@@ -42,10 +42,11 @@ def index():
 def transactions():
     wallet: Wallet = StacktrackService.get_associated_wallet()
     tx_df: pd.DataFrame = Plots.build_tx_df(wallet)
-    balance_plot: go.Figure = Plots.build_plot(tx_df, f"Wallet balance: {wallet.name}")
+    balance_plot: go.Figure = Plots.build_plot(tx_df, f"Wallet Bitcoin balance: {wallet.name}")
     return render_template(
         "stacktrack/transactions.jinja",
         wallet=wallet,
+        txlist=wallet.txlist(),
         services=app.specter.service_manager.services,
         plot=balance_plot,
     )
