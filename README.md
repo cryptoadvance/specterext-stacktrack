@@ -5,7 +5,7 @@ Specter Desktop plugin to add time series charts for visualizing wallet balances
 To run:
 
 ```shell
-git clone git@github.com:wombat6/specterext-stacktrack.git
+git clone https://github.com/wombat6/specterext-stacktrack.git
 cd specterext-stacktrack
 pip3 install virtualenv
 virtualenv --python=python3 .env

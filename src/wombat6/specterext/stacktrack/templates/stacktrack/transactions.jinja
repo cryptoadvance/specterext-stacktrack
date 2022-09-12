@@ -8,19 +8,25 @@
             margin-top: 1em;
         }
         .linked_wallet {
-            margin-bottom: 3em;
+            margin-top: 3em;
         }
         .no_linked_wallet {
             background-color: var(--cmap-bg-lighter);
             border: 2px solid yellow;
             border-radius: 0.5em;
             padding: 2em 3em 2em 3em;
-            margin-bottom: 3em;
+            margin-top: 3em;
         }
         .no_linked_wallet .headline {
             text-align: center;
             font-size: 1.1em;
             margin-bottom: 1em;
+        }
+        .balance_chart {
+            margin-top: 3em;
+        }
+        .table-holder {
+            margin-top: 3em;
         }
         .footnote {
             margin-top: 2em;
@@ -30,12 +36,16 @@
         }
     </style>
 
-    <h1>Stacktrack Transactions</h1>
+    {# <h1>StackTrack Transactions</h1> #}
     {% if wallet %}
+        {#
         <div class="linked_wallet">Linked wallet:
             <a class="explorer-link" href="{{ url_for('wallets_endpoint.addresses', wallet_alias=wallet.alias) }}">{{ wallet.name }}</a><br/>
         </div>
-
+        #}
+        <div class="balance_chart">
+            {{ plot | safe }}
+        </div>
     {% else %}
         <div class="no_linked_wallet">
             <div class="headline">{{ _("Linked Wallet Not Configured") }}</div>
@@ -45,7 +55,7 @@
         </div>
     {% endif %}
 
-    {# TODO: List total withdrawal value? Or just current value of withdrawn utxos? #}
+    {# TODO: List total withdrawal value? Or just current value of withdrawn UTXOs? #}
 
     <div class="table-holder">
         {% include "includes/services-data.html" %}
@@ -68,7 +78,7 @@
     <div id="tx-popup" class="hidden"></div>
 
     <div class="footnote">
-        {{ _("<sup>*</sup>Only shows the withdrawals that this Specter instance is aware of.") }}
+        <sup>*</sup>{{ _("Only shows the withdrawals that this Specter instance is aware of.") }}
     </div>
 
 {% endblock %}

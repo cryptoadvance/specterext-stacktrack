@@ -4,7 +4,7 @@
     stacktrack_menu - Tabs menu to navigate between the stacktrack screens.
     Parameters:
     - active_menuitem: Current active tab. Options: 'general', 'settings', ...
- #}
+#}
 {% macro stacktrack_menu(active_menuitem) -%}
 	<nav class="row collapse-on-mobile">
 		{{ menu_item(service.id, 'index', 'Main', active_menuitem, isLeft=true) }}
