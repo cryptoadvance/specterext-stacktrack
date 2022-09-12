@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 class StacktrackService(Service):
     id = "stacktrack"
     name = "StackTrack"
-    icon = "stacktrack/img/ghost.png"
+    icon = "stacktrack/img/chart.png"
     logo = "stacktrack/img/logo.jpeg"
-    desc = "Where a stacktrack grows bigger."
+    desc = "A chart to visualize your Bitcoin stack over time"
     has_blueprint = True
     blueprint_module = "wombat6.specterext.stacktrack.controller"
     devstatus = devstatus_alpha
