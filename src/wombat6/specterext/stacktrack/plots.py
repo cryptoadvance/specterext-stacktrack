@@ -128,7 +128,7 @@ class Plots:
         fig.add_trace(go.Bar(
             x=df["timestamp"],
             y=df["btc"],
-            name="Daily",
+            name="BTC",
             marker={"color": "Green"},
         ))
         fig.add_trace(go.Scatter(
