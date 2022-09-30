@@ -15,6 +15,8 @@ virtualenv --python=python3 .env
 # virtualenv --python=python3.9 .env
 source .env/bin/activate
 pip3 install -r requirements.txt
+pip3 install -e .
+python3 setup.py install
 python3 -m cryptoadvance.specter server --config DevelopmentConfig --debug
 ```
 

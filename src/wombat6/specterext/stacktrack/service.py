@@ -33,6 +33,7 @@ class StacktrackService(Service):
         def every5seconds(hello, world="world"):
             with scheduler.app.app_context():
                 print(f"Called {hello} {world} every5seconds")
+
         # Here you can schedule regular jobs. triggers can be one of "interval", "date" or "cron"
         # Examples:
         # interval: https://apscheduler.readthedocs.io/en/3.x/modules/triggers/interval.html
@@ -46,7 +47,13 @@ class StacktrackService(Service):
         
         # Maybe you should store the scheduler for later use:
         self.scheduler = scheduler
-        
+
+    def callback_add_wallettabs(self) -> list[dict[str, str]]:
+        return [{
+            "title": "Chart",
+            "endpoint": "stacktrack_wallet_chart",
+        }]
+
     # There might be other callbacks you're interested in. Check the callbacks.py in the specter-desktop source.
     # if you are, create a method here which is "callback_" + callback_id
 

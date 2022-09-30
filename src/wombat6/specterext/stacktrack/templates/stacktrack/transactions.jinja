@@ -21,23 +21,6 @@
             font-size: 1.1em;
             margin-bottom: 1em;
         }
-        .balance_chart {
-            margin-top: 3em;
-        }
-        .balance_chart nav.date_ranges {
-            text-align: center;
-            margin-bottom: 10px;
-            color: #FFF;
-        }
-        .balance_chart nav.date_ranges a {
-            margin: 0 2px;
-            padding: 5px 8px 4px 7px;
-            border: 1px solid #456;
-            border-radius: 5px;
-            background-color: #234;
-            color: #FFF;
-            text-decoration: none;
-        }
         .table-holder {
             margin-top: 3em;
         }
@@ -50,20 +33,8 @@
     </style>
 
     {% if wallet %}
-        {#
         <div class="linked_wallet">Linked wallet:
             <a class="explorer-link" href="{{ url_for('wallets_endpoint.addresses', wallet_alias=wallet.alias) }}">{{ wallet.name }}</a><br/>
-        </div>
-        #}
-        <div class="balance_chart">
-            <nav class="date_ranges">
-                <a href="#">1D</a>
-                <a href="#">1W</a>
-                <a href="#">1M</a>
-                <a href="#">1Y</a>
-                <a href="#">All</a>
-            </nav>
-            {{ plot | safe }}
         </div>
     {% else %}
         <div class="no_linked_wallet">
@@ -90,7 +61,7 @@
             {% endif %}
             btc-unit="{{ specter.unit }}"
             hide-sensitive-info="{{ specter.hide_sensitive_info | lower }}"
-            service-id="stacktrack"
+            {# service-id="stacktrack" #}
             type="txlist"
         />
     </div>

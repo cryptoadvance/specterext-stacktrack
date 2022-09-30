@@ -1,22 +1,29 @@
 import logging
 
-import pandas as pd
 from flask import redirect, render_template, request, url_for
 from flask import current_app as app
 from flask_login import login_required, current_user
 import plotly.graph_objects as go
 
-from cryptoadvance.specter.specter import Specter
+from cryptoadvance.specter.services import callbacks
 from cryptoadvance.specter.services.controller import user_secret_decrypted_required
+from cryptoadvance.specter.specter import Specter
 from cryptoadvance.specter.wallet import Wallet
 
 from .plots import Plots
 from .service import StacktrackService
 
-
 logger = logging.getLogger(__name__)
 
 stacktrack_endpoint = StacktrackService.blueprint
+
+SPANS_TO_PLOT_BUILDERS = {
+    "1d": Plots.build_1d_plot,
+    "1w": Plots.build_1w_plot,
+    "1m": Plots.build_1m_plot,
+    "1y": Plots.build_1y_plot,
+    "all": Plots.build_all_plot,
+}
 
 
 def ext() -> StacktrackService:
@@ -27,6 +34,16 @@ def ext() -> StacktrackService:
 def specter() -> Specter:
     """ convenience for getting the specter-object"""
     return app.specter
+
+
+@stacktrack_endpoint.context_processor
+def inject_common_stuff():
+    """Can be used in all jinja2 templates"""
+    return {
+        "ext_wallettabs": app.specter.service_manager.execute_ext_callbacks(
+            callbacks.add_wallettabs
+        ),
+    }
 
 
 @stacktrack_endpoint.route("/")
@@ -41,14 +58,10 @@ def index():
 @user_secret_decrypted_required
 def transactions():
     wallet: Wallet = StacktrackService.get_associated_wallet()
-    tx_df: pd.DataFrame = Plots.build_tx_df(wallet)
-    balance_plot: go.Figure = Plots.build_plot(tx_df, f"Wallet balance: {wallet.name}")
     return render_template(
         "stacktrack/transactions.jinja",
         wallet=wallet,
-        txlist=wallet.txlist(),
         services=app.specter.service_manager.services,
-        plot=balance_plot,
     )
 
 
@@ -85,3 +98,21 @@ def settings_post():
         wallet = current_user.wallet_manager.get_by_alias(used_wallet_alias)
         StacktrackService.set_associated_wallet(wallet)
     return redirect(url_for(f"{ StacktrackService.get_blueprint_name()}.settings_get"))
+
+
+@stacktrack_endpoint.route("/wallet_chart", methods=["GET"])
+# Disabling these since the wallet endpoints don't seem to require them
+# @login_required
+# @user_secret_decrypted_required
+def stacktrack_wallet_chart() -> str:
+    wallet_alias = request.args.get("wallet_alias")
+    span = request.args.get("span")
+    span = "1y" if span is None else span
+    wallet = app.specter.wallet_manager.get_by_alias(wallet_alias)
+    balance_plot: go.Figure = SPANS_TO_PLOT_BUILDERS[span](wallet)
+    return render_template(
+        "stacktrack/chart.jinja",
+        wallet=wallet,
+        active_span=span,
+        plot=balance_plot,
+    )

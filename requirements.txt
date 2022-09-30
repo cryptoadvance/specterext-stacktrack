@@ -1,3 +1,6 @@
-cryptoadvance.specter==1.12.0
+#cryptoadvance.specter==1.12.0
+#../pull-requests/specter-desktop-menu-ext
+#../specter-desktop
+
 pandas==1.4.4
 plotly==5.10.0
