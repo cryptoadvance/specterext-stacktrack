@@ -53,18 +53,6 @@ def index():
     return render_template("stacktrack/index.jinja")
 
 
-@stacktrack_endpoint.route("/transactions")
-@login_required
-@user_secret_decrypted_required
-def transactions():
-    wallet: Wallet = StacktrackService.get_associated_wallet()
-    return render_template(
-        "stacktrack/transactions.jinja",
-        wallet=wallet,
-        services=app.specter.service_manager.services,
-    )
-
-
 @stacktrack_endpoint.route("/settings", methods=["GET"])
 @login_required
 @user_secret_decrypted_required

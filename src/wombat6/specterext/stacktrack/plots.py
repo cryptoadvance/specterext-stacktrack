@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from plotly.offline import plot
 
 from cryptoadvance.specter.wallet import Wallet
-
+from wombat6.specterext.stacktrack import datetimeutil as dtu
 
 logger = logging.getLogger(__name__)
 
@@ -29,22 +29,19 @@ class Plots:
     def build_1d_plot(cls, wallet: Wallet) -> go.Figure:
         end_dt = dt.datetime.now() + dt.timedelta(hours=1)
         start_dt = end_dt - dt.timedelta(hours=24)
-        start_dt_snap = dt.datetime(start_dt.year, start_dt.month, start_dt.day, start_dt.hour)
-        return cls._to_plot(wallet, start_dt_snap, 24, Interval.HOURLY)
+        return cls._to_plot(wallet, dtu.snap_to_day(start_dt), 24, Interval.HOURLY)
 
     @classmethod
     def build_1w_plot(cls, wallet: Wallet) -> go.Figure:
         end_dt = dt.datetime.now() + dt.timedelta(days=1)
         start_dt = end_dt - dt.timedelta(days=7)
-        start_dt_snap = dt.datetime(start_dt.year, start_dt.month, start_dt.day)
-        return cls._to_plot(wallet, start_dt_snap, 7, Interval.DAILY)
+        return cls._to_plot(wallet, dtu.snap_to_day(start_dt), 7, Interval.DAILY)
 
     @classmethod
     def build_1m_plot(cls, wallet: Wallet) -> go.Figure:
         end_dt = dt.datetime.now() + dt.timedelta(days=1)
         start_dt = end_dt - dt.timedelta(days=30)
-        start_dt_snap = dt.datetime(start_dt.year, start_dt.month, start_dt.day)
-        return cls._to_plot(wallet, start_dt_snap, 30, Interval.DAILY)
+        return cls._to_plot(wallet, dtu.snap_to_day(start_dt), 30, Interval.DAILY)
 
     @classmethod
     def build_1y_plot(cls, wallet: Wallet) -> go.Figure:
@@ -54,8 +51,12 @@ class Plots:
 
     @classmethod
     def build_all_plot(cls, wallet: Wallet) -> go.Figure:
-        # TODO
-        pass
+        now_dt = dt.datetime.now()
+        tx_list: list = wallet.txlist()
+        start_dt = now_dt if len(tx_list) == 0 else dt.datetime.fromtimestamp(tx_list[-1]["time"])
+        start_dt_snap = dtu.snap_to_year(start_dt)
+        n_ticks = 12 * (now_dt.year - start_dt_snap.year + 1)
+        return cls._to_plot(wallet, start_dt_snap, n_ticks, Interval.MONTHLY)
 
     @classmethod
     def _to_plot(cls, wallet, start_dt_snap: dt.datetime, n_ticks: int, interval: Interval):
@@ -107,17 +108,20 @@ class Plots:
             else:
                 prior += amount
 
-        sats = OrderedDict(sorted(sats_by_dt.items())).values()
+        # Null out future amounts
+        now_dt = dt.datetime.now()
+        for item in sats_by_dt.items():
+            curr_dt = item[0]
+            if curr_dt > now_dt:
+                sats_by_dt[curr_dt] = None
 
-        # TODO Don't return all these
-        #  Client can get timetstamps from sats structure anyway
+        sats = OrderedDict(sorted(sats_by_dt.items())).values()
         return timestamps, sats, prior
 
     @classmethod
     def _to_dataframe(cls, timestamps, sats, base_sats):
         df = pd.DataFrame({"timestamp": timestamps, "sats": sats})
         df["sats_cusum"] = df["sats"].cumsum() + base_sats
-        # TODO Decide whether we want to store BTC explicitly
         df["btc"] = df["sats"] / cls.SATS_PER_BTC
         df["btc_cusum"] = df["sats_cusum"] / cls.SATS_PER_BTC
         return df
