@@ -10,20 +10,12 @@ from cryptoadvance.specter.services.controller import user_secret_decrypted_requ
 from cryptoadvance.specter.specter import Specter
 from cryptoadvance.specter.wallet import Wallet
 
-from .plots import Plots
+from .helpers import PlotBuilder
 from .service import StacktrackService
 
 logger = logging.getLogger(__name__)
 
 stacktrack_endpoint = StacktrackService.blueprint
-
-SPANS_TO_PLOT_BUILDERS = {
-    "1d": Plots.build_1d_plot,
-    "1w": Plots.build_1w_plot,
-    "1m": Plots.build_1m_plot,
-    "1y": Plots.build_1y_plot,
-    "all": Plots.build_all_plot,
-}
 
 
 def ext() -> StacktrackService:
@@ -97,7 +89,7 @@ def stacktrack_wallet_chart() -> str:
     span = request.args.get("span")
     span = "1y" if span is None else span
     wallet = app.specter.wallet_manager.get_by_alias(wallet_alias)
-    balance_plot: go.Figure = SPANS_TO_PLOT_BUILDERS[span](wallet)
+    balance_plot: go.Figure = getattr(PlotBuilder, f"build_plot_{span}")(wallet)
     return render_template(
         "stacktrack/chart.jinja",
         wallet=wallet,
