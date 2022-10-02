@@ -1,4 +1,4 @@
-![chart_ss](https://user-images.githubusercontent.com/112285082/189620049-257b8502-a281-4dc9-9712-835cb37513ec.png)
+![chart_ss](https://user-images.githubusercontent.com/112285082/193432527-3511bdd2-def7-47b4-94ae-0c0f815501a3.png)
 
 # specterext-stacktrack
 
