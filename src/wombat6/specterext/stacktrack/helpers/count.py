@@ -36,16 +36,16 @@ def count_sats(
     txs: list = wallet.txlist()
     for tx in txs:
         tx_dt = dt.datetime.fromtimestamp(tx["time"])
-        tx_dt_snap = dtutil.snap_to(tx_dt, interval)
         amount = round(tx["amount"] * SATS_PER_BTC)
         if tx["category"] == "send":
             amount = -amount
-        if tx_dt_snap in sat_bins.keys():
-            sat_bins[tx_dt_snap] += amount
-        else:
+        if tx_dt < timestamps[0]:
             prior_count += amount
+        else:
+            tx_dt_snap = dtutil.snap_to(tx_dt, interval)
+            sat_bins[tx_dt_snap] += amount
 
-    sats = OrderedDict(sorted(sat_bins.items())).values()
+    sats = [item[1] for item in sorted(sat_bins.items())]
 
     df = pd.DataFrame({"timestamp": timestamps, "sats": sats})
     df["sats_cusum"] = df["sats"].cumsum() + prior_count
