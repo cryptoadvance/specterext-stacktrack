@@ -1,5 +1,4 @@
 import datetime as dt
-from collections import OrderedDict
 import logging
 
 from cryptoadvance.specter.wallet import Wallet
@@ -42,8 +41,8 @@ def count_sats(
         if tx_dt < timestamps[0]:
             prior_count += amount
         else:
-            tx_dt_snap = dtutil.snap_to(tx_dt, interval)
-            sat_bins[tx_dt_snap] += amount
+            bin_dt = dtutil.snap_to(tx_dt, interval)
+            sat_bins[bin_dt] += amount
 
     sats = [item[1] for item in sorted(sat_bins.items())]
 
