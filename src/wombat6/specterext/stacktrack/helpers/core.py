@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class Interval(Enum):
-    HOURLY = 1
-    DAILY = 2
-    MONTHLY = 3
+    HOUR = 1
+    DAY = 2
+    MONTH = 3
