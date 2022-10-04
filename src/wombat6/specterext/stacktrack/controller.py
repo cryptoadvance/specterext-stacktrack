@@ -80,19 +80,21 @@ def settings_post():
     return redirect(url_for(f"{ StacktrackService.get_blueprint_name()}.settings_get"))
 
 
-@stacktrack_endpoint.route("/wallet_chart", methods=["GET"])
+# @stacktrack_endpoint.route("/wallet_chart", methods=["GET"])
+@stacktrack_endpoint.route("/wallet/<wallet_alias>/chart", methods=["GET"])
 # Disabling these since the wallet endpoints don't seem to require them
 # @login_required
 # @user_secret_decrypted_required
-def stacktrack_wallet_chart() -> str:
-    wallet_alias = request.args.get("wallet_alias")
+def stacktrack_wallet_chart(wallet_alias: str) -> str:
     span = request.args.get("span")
     span = "1y" if span is None else span
     wallet = app.specter.wallet_manager.get_by_alias(wallet_alias)
     balance_plot: go.Figure = getattr(pbuild, f"build_plot_{span}")(wallet)
     return render_template(
         "stacktrack/chart.jinja",
+        wallet_alias=wallet_alias,
         wallet=wallet,
+        ext_wallettabs=app.specter.service_manager.execute_ext_callbacks(callbacks.add_wallettabs),
         active_span=span,
         plot=balance_plot,
     )

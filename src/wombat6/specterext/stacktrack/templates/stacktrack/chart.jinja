@@ -3,7 +3,7 @@
 {% macro stacktrack_span_menu_item(span, span_title, active_span, isLeft=false, isRight=false) -%}
     {# TODO Use url_for()? #}
     <a
-        href="wallet_chart?wallet_alias={{ wallet.alias }}&span={{ span }}"
+        href="chart?span={{ span }}"
         class="btn radio {% if isLeft %}left{% endif %} {% if isRight %}right{% endif %} {% if active_span == span %}checked{% endif %}">
         {{ span_title }}
     </a>
