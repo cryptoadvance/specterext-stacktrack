@@ -20,6 +20,23 @@ def count_sats(
         interval: Interval
 ) -> pd.DataFrame:
 
+    """
+    Counts the wallet's satoshis for the given time range, binned by the given interval. The returned DataFrame has
+    three columns:
+
+    - timestamp: Timestamp in epoch seconds.
+    - sats: Satoshi count for a given interval. Can be negative if there was a net outflow.
+    - sats_cusum: Satoshi cumulative sum. Again this can be negative if there was a net outflow.
+
+    Note that satoshis for transactions before the start time are rolled into the satoshi cumulative sum.
+
+    :param wallet: bitcoin wallet
+    :param start_dt: start of the time range (inclusive)
+    :param end_dt: end of the time range (exclusive)
+    :param interval: increment interval
+    :return: a pandas DataFrame as described above
+    """
+
     timestamps = []
     sat_bins = {}
     prior_count = 0
@@ -48,7 +65,5 @@ def count_sats(
 
     df = pd.DataFrame({"timestamp": timestamps, "sats": sats})
     df["sats_cusum"] = df["sats"].cumsum() + prior_count
-    df["btc"] = df["sats"] / SATS_PER_BTC
-    df["btc_cusum"] = df["sats_cusum"] / SATS_PER_BTC
 
     return df

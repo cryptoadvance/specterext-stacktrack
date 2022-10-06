@@ -54,7 +54,7 @@ def test_next_dt_day_rollover():
     assert result == datetime(2022, 11, 1)
 
 
-def test_next_dt_day_rollover_leap_year():
+def test_next_dt_day_rollover_leap_day():
     curr_dt = datetime(2024, 2, 29, 16, 38, 30)
     result = dtutil.next_dt(curr_dt, Interval.DAY)
     assert result == datetime(2024, 3, 1)
@@ -66,7 +66,7 @@ def test_next_dt_month():
     assert result == datetime(2022, 11, 1)
 
 
-def test_next_dt_month_rollober():
+def test_next_dt_month_rollover():
     curr_dt = datetime(2022, 12, 5, 16, 38, 30)
     result = dtutil.next_dt(curr_dt, Interval.MONTH)
     assert result == datetime(2023, 1, 1)
