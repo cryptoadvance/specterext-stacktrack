@@ -4,6 +4,18 @@ from .core import Interval
 
 
 def snap_to(dt: datetime, interval: Interval) -> datetime:
+    """
+    Snaps the given datetime to a new datetime floor, as determined by the interval. For example, this method would
+    convert 2022-09-12 14:08:01 to
+
+    - 2022-09-12 14:00:00 for Interval.HOUR
+    - 2022-09-12 00:00:00 for Interval.DAY
+    - 2022-09-01 00:00:00 for Interval.MONTH
+
+    :param dt: a datetime
+    :param interval: interval to determine the floor to snap to
+    :return: the snapped datetime
+    """
     if interval == Interval.HOUR:
         return datetime(dt.year, dt.month, dt.day, dt.hour)
     elif interval == Interval.DAY:
