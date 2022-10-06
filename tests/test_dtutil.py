@@ -28,3 +28,45 @@ def test_snap_to_invalid_interval():
     with pytest.raises(ValueError):
         dt = datetime(2022, 10, 5, 16, 38, 30)
         dtutil.snap_to(dt, -1)
+
+
+def test_next_dt_hour():
+    curr_dt = datetime(2022, 10, 5, 16, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.HOUR)
+    assert result == datetime(2022, 10, 5, 17, 0, 0)
+
+
+def test_next_dt_hour_rollover():
+    curr_dt = datetime(2022, 10, 5, 23, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.HOUR)
+    assert result == datetime(2022, 10, 6)
+
+
+def test_next_dt_day():
+    curr_dt = datetime(2022, 10, 5, 16, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.DAY)
+    assert result == datetime(2022, 10, 6)
+
+
+def test_next_dt_day_rollover():
+    curr_dt = datetime(2022, 10, 31, 16, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.DAY)
+    assert result == datetime(2022, 11, 1)
+
+
+def test_next_dt_day_rollover_leap_year():
+    curr_dt = datetime(2024, 2, 29, 16, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.DAY)
+    assert result == datetime(2024, 3, 1)
+
+
+def test_next_dt_month():
+    curr_dt = datetime(2022, 10, 5, 16, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.MONTH)
+    assert result == datetime(2022, 11, 1)
+
+
+def test_next_dt_month_rollober():
+    curr_dt = datetime(2022, 12, 5, 16, 38, 30)
+    result = dtutil.next_dt(curr_dt, Interval.MONTH)
+    assert result == datetime(2023, 1, 1)
