@@ -18,7 +18,7 @@ class StacktrackService(Service):
     logo = "stacktrack/img/logo.jpeg"
     desc = "A chart to visualize your Bitcoin stack over time"
     has_blueprint = True
-    blueprint_module = "wombat6.specterext.stacktrack.controller"
+    blueprint_module = "cryptoadvance.specterext.stacktrack.controller"
     devstatus = devstatus_alpha
     isolated_client = False
 

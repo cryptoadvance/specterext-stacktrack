@@ -1,0 +1,16 @@
+container:
+  image: registry.gitlab.com/cryptoadvance/specter-desktop/cirrus-jammy:20220908
+
+test_task:
+  pip_script:
+    - virtualenv --python=python3 .env 
+    - source ./.env/bin/activate
+    - pip3 install -r requirements.txt
+    - python3 setup.py install
+    - pip3 install -e .
+    - echo $PATH
+    - pytest #--cov=cryptoadvance --junitxml=./testresults.xml
+  always:
+    junit_artifacts:
+      path: "./testresults.xml"
+      format: junit

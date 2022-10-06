@@ -10,13 +10,13 @@ def plot_sats(df: pd.DataFrame, title: str) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=df["timestamp"],
-        y=df["btc"],
+        y=df["sats"],
         name="BTC",
         marker={"color": "Green"},
     ))
     fig.add_trace(go.Scatter(
         x=df["timestamp"],
-        y=df["btc_cusum"],
+        y=df["sats_cusum"],
         name="Cumulative",
         mode="lines",
         line_shape="hv",

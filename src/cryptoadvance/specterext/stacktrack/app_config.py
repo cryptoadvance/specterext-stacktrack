@@ -10,7 +10,7 @@ class AppProductionConfig(SpecterProductionConfig):
     ROOT_URL_REDIRECT = "/spc/ext/stacktrack"
     # I guess this is the only extension which should be available?
     EXTENSION_LIST = [
-        "wombat6.specterext.stacktrack.service"
+        "cryptoadvance.specterext.stacktrack.service"
     ]
     # You might also want a different folder here
     SPECTER_DATA_FOLDER = os.path.expanduser("~/.stacktrack")

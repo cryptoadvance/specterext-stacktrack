@@ -31,7 +31,7 @@ def cli():
 )
 def start(ctx, host, ssl, debug, filelog, config):
     if config == None:
-        config = "wombat6.specterext.stacktrack.config.AppProductionConfig"
+        config = "cryptoadvance.specterext.stacktrack.config.AppProductionConfig"
     ctx.invoke(server, host=host, ssl=ssl, debug=debug, filelog=filelog, port=8080, config=config)
     
 entry_point.add_command(start)
