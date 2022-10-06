@@ -13,4 +13,4 @@ test_task:
   always:
     junit_artifacts:
       path: "./testresults.xml"
-      format: junit
+      format: junit 
