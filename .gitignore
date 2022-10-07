@@ -9,3 +9,5 @@ btcd-conn.json
 elmd-conn.json
 prevent_mining
 .idea
+build/
+dist/

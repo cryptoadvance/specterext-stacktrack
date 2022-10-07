@@ -5,12 +5,10 @@ from cryptoadvance.specter.wallet import Wallet
 import pandas as pd
 
 from . import dtutil
-from .core import Interval
+from .core import *
 
 
 logger = logging.getLogger(__name__)
-
-SATS_PER_BTC: int = 100_000_000
 
 
 def count_sats(
