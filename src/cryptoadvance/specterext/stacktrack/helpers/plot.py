@@ -2,6 +2,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.offline import plot
 
+from .core import SATS_PER_BTC
+
 
 # TODO
 # - Use UTC
@@ -10,13 +12,13 @@ def plot_sats(df: pd.DataFrame, title: str) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=df["timestamp"],
-        y=df["sats"],
+        y=df["sats"] / SATS_PER_BTC,
         name="BTC",
         marker={"color": "Green"},
     ))
     fig.add_trace(go.Scatter(
         x=df["timestamp"],
-        y=df["sats_cusum"],
+        y=df["sats_cusum"] / SATS_PER_BTC,
         name="Cumulative",
         mode="lines",
         line_shape="hv",
