@@ -2,8 +2,8 @@ from datetime import datetime
 
 import pytest
 
-from wombat6.specterext.stacktrack.helpers import dtutil
-from wombat6.specterext.stacktrack.helpers.core import Interval
+from cryptoadvance.specterext.stacktrack.helpers import dtutil
+from cryptoadvance.specterext.stacktrack.helpers.core import Interval
 
 
 def test_snap_to_hour():
