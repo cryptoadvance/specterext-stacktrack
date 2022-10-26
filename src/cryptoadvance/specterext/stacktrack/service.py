@@ -7,6 +7,7 @@ from cryptoadvance.specter.services.service import Service, devstatus_alpha, dev
 # A SpecterError can be raised and will be shown to the user as a red banner
 from cryptoadvance.specter.specter_error import SpecterError
 from cryptoadvance.specter.wallet import Wallet
+from cryptoadvance.specter.server_endpoints.wallets.wallets_vm import WalletsOverviewVm
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +55,14 @@ class StacktrackService(Service):
             "endpoint": "stacktrack_wallet_chart",
         }]
 
+    def callback_adjust_view_model(self, view_model: WalletsOverviewVm):
+        if type(view_model) == WalletsOverviewVm:
+            # potentially, we could make a reidrect here:
+            # view_model.about_redirect=url_for("spectrum_endpoint.some_enpoint_here")
+            # but we do it small here and only replace a specific component:
+            view_model.tx_table_include  = "stacktrack/overview.jinja"
+
+        return view_model
     # There might be other callbacks you're interested in. Check the callbacks.py in the specter-desktop source.
     # if you are, create a method here which is "callback_" + callback_id
 
