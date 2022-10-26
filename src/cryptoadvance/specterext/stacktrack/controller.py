@@ -40,51 +40,13 @@ def inject_common_stuff():
 
 @stacktrack_endpoint.route("/")
 @login_required
-@user_secret_decrypted_required
 def index():
     return render_template("stacktrack/index.jinja")
 
 
-@stacktrack_endpoint.route("/settings", methods=["GET"])
-@login_required
-@user_secret_decrypted_required
-def settings_get():
-    associated_wallet: Wallet = StacktrackService.get_associated_wallet()
-
-    # Get the user's Wallet objs, sorted by Wallet.name
-    wallet_names = sorted(current_user.wallet_manager.wallets.keys())
-    wallets = [current_user.wallet_manager.wallets[name] for name in wallet_names]
-
-    return render_template(
-        "stacktrack/settings.jinja",
-        associated_wallet=associated_wallet,
-        wallets=wallets,
-        cookies=request.cookies,
-    )
-
-
-@stacktrack_endpoint.route("/settings", methods=["POST"])
-@login_required
-@user_secret_decrypted_required
-def settings_post():
-    show_menu = request.form["show_menu"]
-    user = app.specter.user_manager.get_user()
-    if show_menu == "yes":
-        user.add_service(StacktrackService.id)
-    else:
-        user.remove_service(StacktrackService.id)
-    used_wallet_alias = request.form.get("used_wallet")
-    if used_wallet_alias is not None:
-        wallet = current_user.wallet_manager.get_by_alias(used_wallet_alias)
-        StacktrackService.set_associated_wallet(wallet)
-    return redirect(url_for(f"{ StacktrackService.get_blueprint_name()}.settings_get"))
-
-
 # @stacktrack_endpoint.route("/wallet_chart", methods=["GET"])
 @stacktrack_endpoint.route("/wallet/<wallet_alias>/chart", methods=["GET"])
-# Disabling these since the wallet endpoints don't seem to require them
-# @login_required
-# @user_secret_decrypted_required
+@login_required
 def stacktrack_wallet_chart(wallet_alias: str) -> str:
     span = request.args.get("span")
     span = "1y" if span is None else span
