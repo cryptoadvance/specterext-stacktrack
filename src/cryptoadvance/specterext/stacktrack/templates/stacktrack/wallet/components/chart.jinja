@@ -1,5 +1,5 @@
 {% macro stacktrack_span_menu_item(span, span_title, active_span, isLeft=false, isRight=false) -%}
-    {# TODO Use url_for()? Also, don't use chart for URL as it doesn't work for the wallets overview. #}
+    {# TODO Use url_for()? #}
     <a
         href="{{ url_path }}?span={{ span }}"
         class="btn radio {% if isLeft %}left{% endif %} {% if isRight %}right{% endif %} {% if active_span == span %}checked{% endif %}">
@@ -20,17 +20,17 @@
 {% set tab = "stacktrack_wallet_chart" %}
 
 <style>
+    .balance_chart {
+        margin-top: 1em;
+        display: flex;
+        justify-content: center;
+    }
     .balance_chart_container {
         margin-top: 2em;
         margin-bottom: 2em;
     }
     .balance_chart_container .btn.radio {
         max-width: 80px;
-    }
-    .balance_chart {
-        margin-top: 1em;
-        display: flex;
-        justify-content: center;
     }
 </style>
 <div class="balance_chart_container">
