@@ -1,4 +1,5 @@
 import os
+
 from cryptoadvance.specter.config import ProductionConfig as SpecterProductionConfig
 
 
