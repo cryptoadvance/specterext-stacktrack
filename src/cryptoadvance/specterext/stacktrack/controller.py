@@ -64,7 +64,7 @@ def wallets_overview():
         wallet.update_balance()
         wallet.check_utxo()
     txs: list = _extract_txs(wallets)
-    chart: go.Figure = getattr(plot, f"build_chart_{span}")(txs)
+    chart: go.Figure = plot.build_chart(span, txs)
 
     return render_template(
         "wallet/overview/wallets_overview.jinja",
@@ -86,7 +86,7 @@ def stacktrack_wallet_chart(wallet_alias: str) -> str:
     span: str = request.args.get("span")
     span = "1y" if span is None else span
     wallet: Wallet = app.specter.wallet_manager.get_by_alias(wallet_alias)
-    chart: go.Figure = getattr(plot, f"build_chart_{span}")(wallet.txlist())
+    chart: go.Figure = plot.build_chart(span, wallet.txlist())
     return render_template(
         "stacktrack/wallet/chart/wallet_chart.jinja",
         wallet_alias=wallet_alias,
