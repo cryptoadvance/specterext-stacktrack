@@ -57,15 +57,9 @@ class StacktrackService(Service):
         }]
 
     def callback_adjust_view_model(self, view_model: WalletsOverviewVm):
-        # This is where we configure view model customizations for StackTrack.
         if type(view_model) == WalletsOverviewVm:
-            # view_model.header_and_summary_include = "..."
-            # view_model.balance_overview_include = "..."
-
             # Redirect to our custom StackTrack controller so we can generate a chart.
             view_model.wallets_overview_redirect = url_for("stacktrack_endpoint.wallets_overview")
-            # Replace the default tx table with one that includes a chart.
-            view_model.tx_table_include = "stacktrack/wallet/overview/overview_chart_and_tx_table.jinja"
 
         return view_model
 

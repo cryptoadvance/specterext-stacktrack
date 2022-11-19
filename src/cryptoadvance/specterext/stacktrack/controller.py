@@ -55,15 +55,9 @@ def wallets_overview():
 
     specter().check_blockheight()
 
-    wallets_overview_vm_dict = specter().service_manager.execute_ext_callbacks(
-        adjust_view_model, WalletsOverviewVm()
-    )
-    if len(wallets_overview_vm_dict) == 0:
-        wallets_overview_vm = WalletsOverviewVm()
-    elif len(wallets_overview_vm_dict.values()) == 1:
-        wallets_overview_vm = list(wallets_overview_vm_dict.values())[0]
-    else:
-        raise logger.error("Seems that we have more than one WalletsOverviewVm Extension")
+    # Replace the default tx table with one that includes a chart.
+    view_model = WalletsOverviewVm()
+    view_model.tx_table_include = "stacktrack/wallet/overview/overview_chart_and_tx_table.jinja"
 
     wallets: list[Wallet] = list(specter().wallet_manager.wallets.values())
     for wallet in wallets:
@@ -77,7 +71,7 @@ def wallets_overview():
         specter=specter(),
         rand=rand,
         services=specter().service_manager.services,
-        wallets_overview_vm=wallets_overview_vm,
+        wallets_overview_vm=view_model,
         active_span=span,
         chart=chart,
         url_path="wallets_overview",
