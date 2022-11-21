@@ -1,15 +1,14 @@
 {% extends "base.jinja" %}
 {% block title %}Index{% endblock %}
 {% block main %}
-
     <img src="{{ url_for(service.id +'_endpoint' + '.static', filename=service.icon) }}" width="100"/>  
     <br><br><br>
-    <div class="tagline">Stacktrack Extension</div>
+    <div class="tagline">StackTrack Extension</div>
     <br>
     <div class="card">
         <p>
-            There is not much to see here. The Stacktrack Extension contains code for the ability
-            to show nice graphs of your ever growing stack. You can find it in any wallet in the chart-tab. 
+            The StackTrack extension shows charts of your ever-growing stack. You can find it in any wallet in the Chart
+            tab. You can also find it on the Wallets Overview if you have multiple wallets.
         </p>
     </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 import logging
 
-from flask import current_app as app
+from flask import current_app as app, url_for
 from flask_apscheduler import APScheduler
 
 from cryptoadvance.specter.services.service import Service, devstatus_alpha, devstatus_prod, devstatus_beta
@@ -8,6 +8,7 @@ from cryptoadvance.specter.services.service import Service, devstatus_alpha, dev
 from cryptoadvance.specter.specter_error import SpecterError
 from cryptoadvance.specter.wallet import Wallet
 from cryptoadvance.specter.server_endpoints.wallets.wallets_vm import WalletsOverviewVm
+
 
 logger = logging.getLogger(__name__)
 
@@ -57,12 +58,11 @@ class StacktrackService(Service):
 
     def callback_adjust_view_model(self, view_model: WalletsOverviewVm):
         if type(view_model) == WalletsOverviewVm:
-            # potentially, we could make a reidrect here:
-            # view_model.about_redirect=url_for("spectrum_endpoint.some_enpoint_here")
-            # but we do it small here and only replace a specific component:
-            view_model.tx_table_include  = "stacktrack/overview.jinja"
+            # Redirect to our custom StackTrack controller so we can generate a chart.
+            view_model.wallets_overview_redirect = url_for("stacktrack_endpoint.wallets_overview")
 
         return view_model
+
     # There might be other callbacks you're interested in. Check the callbacks.py in the specter-desktop source.
     # if you are, create a method here which is "callback_" + callback_id
 

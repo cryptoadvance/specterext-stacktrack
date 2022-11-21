@@ -1,9 +1,7 @@
-{% extends "wallet/components/wallet_tab.jinja" %}
-
 {% macro stacktrack_span_menu_item(span, span_title, active_span, isLeft=false, isRight=false) -%}
     {# TODO Use url_for()? #}
     <a
-        href="chart?span={{ span }}"
+        href="{{ url_path }}?span={{ span }}"
         class="btn radio {% if isLeft %}left{% endif %} {% if isRight %}right{% endif %} {% if active_span == span %}checked{% endif %}">
         {{ span_title }}
     </a>
@@ -21,21 +19,23 @@
 
 {% set tab = "stacktrack_wallet_chart" %}
 
-{% block content %}
-    <style>
-        .balance_chart {
-            margin-top: 2em;
-            display: flex;
-            justify-content: center;
-        }
-        .balance_chart_container .btn.radio {
-            max-width: 80px;
-        }
-    </style>
-    <div class="balance_chart_container">
-        {{ stacktrack_span_menu(active_span) }}
-        <div class="balance_chart">
-            {{ plot | safe }}
-        </div>
+<style>
+    .balance_chart {
+        margin-top: 1em;
+        display: flex;
+        justify-content: center;
+    }
+    .balance_chart_container {
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+    .balance_chart_container .btn.radio {
+        max-width: 80px;
+    }
+</style>
+<div class="balance_chart_container">
+    {{ stacktrack_span_menu(active_span) }}
+    <div class="balance_chart">
+        {{ chart | safe }}
     </div>
-{% endblock %}
+</div>
