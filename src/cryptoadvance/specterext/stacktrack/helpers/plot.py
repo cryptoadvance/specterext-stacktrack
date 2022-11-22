@@ -160,7 +160,6 @@ def _build_chart_from_df(df: pd.DataFrame) -> go.Figure:
         paper_bgcolor="#11181F",
         plot_bgcolor="#11181F",
         barmode="stack",
-        # showlegend=False,
         legend=dict(
             orientation="h",
             x=0.5,
@@ -168,6 +167,5 @@ def _build_chart_from_df(df: pd.DataFrame) -> go.Figure:
             xanchor="center",
             yanchor="bottom",
         ),
-        legend_traceorder="reversed",
     )
     return plotly_plot(fig, output_type="div")
