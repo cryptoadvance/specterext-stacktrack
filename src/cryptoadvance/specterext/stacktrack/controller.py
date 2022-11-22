@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 
 from cryptoadvance.specter.server_endpoints.wallets.wallets_vm import WalletsOverviewVm
 from cryptoadvance.specter.services import callbacks
-from cryptoadvance.specter.services.callbacks import adjust_view_model
 from cryptoadvance.specter.specter import Specter
 from cryptoadvance.specter.wallet import Wallet
 
