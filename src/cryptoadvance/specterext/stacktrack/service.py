@@ -50,7 +50,9 @@ class StacktrackService(Service):
         # Maybe you should store the scheduler for later use:
         self.scheduler = scheduler
 
-    def callback_add_wallettabs(self) -> list[dict[str, str]]:
+    # 'type' object not subscriptable in Python 3.7, so just use bare list.
+    # def callback_add_wallettabs(self) -> list[dict[str, str]]:
+    def callback_add_wallettabs(self) -> list:
         return [{
             "title": "Chart",
             "endpoint": "stacktrack_wallet_chart",
