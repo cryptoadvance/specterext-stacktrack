@@ -97,7 +97,9 @@ def stacktrack_wallet_chart(wallet_alias: str) -> str:
     )
 
 
-def _extract_txs(wallets: list[Wallet]) -> list:
+# 'type' object not subscriptable in Python 3.7, so just use bare list.
+# def _extract_txs(wallets: list[Wallet]) -> list:
+def _extract_txs(wallets: list) -> list:
     txs: list = []
     for wallet in wallets:
         txs = txs + wallet.txlist()
