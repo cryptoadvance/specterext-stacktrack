@@ -1,5 +1,37 @@
 [build-system]
 requires = [
-    "cryptoadvance.specter==1.13.0"
+    "cryptoadvance.specter>=1.14.5"
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "specterext_stacktrack"
+version = "0.1.1rc1"
+
+authors = [
+  { name="Wombat6"},
+]
+description = "Specter Desktop extension to add time series charts for visualizing wallet balances"
+urls = { Homepage = "https://github.com/cryptoadvance/specterext-stacktrack" }
+readme = "README.md"
+
+requires-python = ">=3.9"
+
+dependencies = [
+    "pandas>=1.3.0",
+    "plotly==5.10.0",
+]
+
+license = {file = "LICENSE"}
+
+classifiers =[
+    'Programming Language :: Python :: 3',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest >=7.1.3",
+  "pytest-cov[all]"
+]
