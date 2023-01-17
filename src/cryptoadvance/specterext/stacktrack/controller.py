@@ -63,7 +63,11 @@ def wallets_overview():
         wallet.update_balance()
         wallet.check_utxo()
     txs: list = _extract_txs(wallets)
-    chart: go.Figure = plot.build_chart(span, txs)
+    try:
+        chart: go.Figure = plot.build_chart(span, txs)
+    except Exception as e:
+        logger.exception(e)
+        chart = None
 
     return render_template(
         "wallet/overview/wallets_overview.jinja",

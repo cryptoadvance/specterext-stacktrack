@@ -3,5 +3,7 @@
     See callback_adjust_view_model() in service.py.
 #}
 
+{% if chart %}
 {% include "stacktrack/wallet/components/chart.jinja" %}
+{% endif %}
 {% include "wallet/overview/tx_table.jinja" %}
