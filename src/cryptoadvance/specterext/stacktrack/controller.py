@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 
 from cryptoadvance.specter.server_endpoints.wallets.wallets_vm import WalletsOverviewVm
 from cryptoadvance.specter.services import callbacks
-from cryptoadvance.specter.services.callbacks import adjust_view_model
 from cryptoadvance.specter.specter import Specter
 from cryptoadvance.specter.wallet import Wallet
 
@@ -64,7 +63,11 @@ def wallets_overview():
         wallet.update_balance()
         wallet.check_utxo()
     txs: list = _extract_txs(wallets)
-    chart: go.Figure = plot.build_chart(span, txs)
+    try:
+        chart: go.Figure = plot.build_chart(span, txs)
+    except Exception as e:
+        logger.exception(e)
+        chart = None
 
     return render_template(
         "wallet/overview/wallets_overview.jinja",
@@ -98,7 +101,9 @@ def stacktrack_wallet_chart(wallet_alias: str) -> str:
     )
 
 
-def _extract_txs(wallets: list[Wallet]) -> list:
+# 'type' object not subscriptable in Python 3.7, so just use bare list.
+# def _extract_txs(wallets: list[Wallet]) -> list:
+def _extract_txs(wallets: list) -> list:
     txs: list = []
     for wallet in wallets:
         txs = txs + wallet.txlist()

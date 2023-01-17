@@ -2,6 +2,7 @@ import datetime as dt
 import logging
 import sys
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.offline import plot as plotly_plot
@@ -101,6 +102,10 @@ def _count_sats(
         # TODO Check on the difference between "time" and "blocktime".
         #  Not sure which I'm supposed to use here.
         tx_dt = dt.datetime.fromtimestamp(tx["time"])
+        # weird quickfix for tx which have more than one output to the 
+        # same wallet
+        if type(tx["amount"]) == list:
+            tx["amount"] = sum(tx["amount"])
         amount = round(tx["amount"] * SATS_PER_BTC)
         if tx["category"] == "send":
             amount = -amount
@@ -122,12 +127,23 @@ def _count_sats(
 # - Use UTC
 # - Sunday vs Monday start
 def _build_chart_from_df(df: pd.DataFrame) -> go.Figure:
+    df["in"] = np.maximum(df["sats"], 0)
+    df["out"] = np.minimum(df["sats"], 0)
+
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=df["timestamp"],
-        y=df["sats"] / SATS_PER_BTC,
-        name="BTC",
+        y=df["in"] / SATS_PER_BTC,
+        name="BTC In",
         marker={"color": "Green"},
+        legendrank=3
+    ))
+    fig.add_trace(go.Bar(
+        x=df["timestamp"],
+        y=df["out"] / SATS_PER_BTC,
+        name="BTC Out",
+        marker={"color": "DarkRed"},
+        legendrank=2
     ))
     fig.add_trace(go.Scatter(
         x=df["timestamp"],
@@ -136,6 +152,7 @@ def _build_chart_from_df(df: pd.DataFrame) -> go.Figure:
         mode="lines",
         line_shape="hv",
         marker={"color": "Gold"},
+        legendrank=1
     ))
     fig.update_layout(
         title="Balance",
@@ -146,5 +163,13 @@ def _build_chart_from_df(df: pd.DataFrame) -> go.Figure:
         height=400,
         paper_bgcolor="#11181F",
         plot_bgcolor="#11181F",
+        barmode="stack",
+        legend=dict(
+            orientation="h",
+            x=0.5,
+            y=1.02,
+            xanchor="center",
+            yanchor="bottom",
+        ),
     )
     return plotly_plot(fig, output_type="div")

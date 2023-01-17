@@ -11,7 +11,7 @@ $ git clone https://github.com/cryptoadvance/specterext-stacktrack.git
 $ cd specterext-stacktrack
 $ pip3 install virtualenv
 $ virtualenv --python=python3 .env
-# or do this instead to avoid 3.10, is isn't yet supported
+# or do this instead to avoid 3.10, as it isn't yet supported
 # $ virtualenv --python=python3.9 .env
 $ source .env/bin/activate
 $ pip3 install -r requirements.txt
