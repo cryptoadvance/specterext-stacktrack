@@ -102,13 +102,7 @@ def _count_sats(
         # TODO Check on the difference between "time" and "blocktime".
         #  Not sure which I'm supposed to use here.
         tx_dt = dt.datetime.fromtimestamp(tx["time"])
-        # weird quickfix for tx which have more than one output to the 
-        # same wallet
-        if type(tx["amount"]) == list:
-            tx["amount"] = sum(tx["amount"])
-        amount = round(tx["amount"] * SATS_PER_BTC)
-        if tx["category"] == "send":
-            amount = -amount
+        amount = round(tx.flow_amount * SATS_PER_BTC)
         if tx_dt < timestamps[0]:
             prior_count += amount
         else:
