@@ -24,6 +24,8 @@ class StacktrackService(Service):
     devstatus = devstatus_alpha
     isolated_client = False
 
+    SHOW_OVERVIEW_CHART = "show_overview_chart"
+
     # TODO: As more Services are integrated, we'll want more robust categorization and sorting logic
     sort_priority = 2
 
@@ -70,23 +72,21 @@ class StacktrackService(Service):
     # if you are, create a method here which is "callback_" + callback_id
 
     @classmethod
-    def get_associated_wallet(cls) -> Wallet:
-        """Get the Specter `Wallet` that is currently associated with this service"""
+    def get_show_overview_chart(cls) -> str:
         service_data = cls.get_current_user_service_data()
-        if not service_data or cls.SPECTER_WALLET_ALIAS not in service_data:
+        if not service_data or cls.SHOW_OVERVIEW_CHART not in service_data:
             # Service is not initialized; nothing to do
-            return
+            return "no"
         try:
-            return app.specter.wallet_manager.get_by_alias(
-                service_data[cls.SPECTER_WALLET_ALIAS]
-            )
-        except SpecterError as e:
-            logger.debug(e)
+            return service_data[cls.SHOW_OVERVIEW_CHART]
+            
+        except Exception as e:
+            logger.exception(e)
             # Referenced an unknown wallet
             # TODO: keep ignoring or remove the unknown wallet from service_data?
-            return
+            return "no"
 
     @classmethod
-    def set_associated_wallet(cls, wallet: Wallet):
+    def set_show_overview_chart(cls, value: bool):
         """Set the Specter `Wallet` that is currently associated with this Service"""
-        cls.update_current_user_service_data({cls.SPECTER_WALLET_ALIAS: wallet.alias})
+        cls.update_current_user_service_data({cls.SHOW_OVERVIEW_CHART: value})

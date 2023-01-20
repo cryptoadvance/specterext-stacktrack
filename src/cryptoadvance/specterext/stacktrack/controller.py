@@ -1,7 +1,7 @@
 import logging
 import random
 
-from flask import current_app as app, render_template, request
+from flask import current_app as app, render_template, request, redirect, url_for
 from flask_login import login_required
 import plotly.graph_objects as go
 
@@ -43,12 +43,26 @@ def inject_common_stuff():
 @stacktrack_endpoint.route("/")
 @login_required
 def index():
-    return render_template("stacktrack/index.jinja")
+    show_overview_chart: str = StacktrackService.get_show_overview_chart()
+    print(show_overview_chart)
+    return render_template(
+        "stacktrack/index.jinja",
+        show_overview_chart=show_overview_chart,
+    )
+
+@stacktrack_endpoint.route("/settings", methods=["POST"])
+@login_required
+def settings_post():
+    show_overview_chart = request.form["show_overview_chart"]
+    print(show_overview_chart)
+    StacktrackService.set_show_overview_chart(show_overview_chart)
+    return redirect(url_for(f"{StacktrackService.get_blueprint_name()}.index"))
 
 
 @stacktrack_endpoint.route("/wallets_overview")
 @login_required
 def wallets_overview():
+    show_overview_chart = StacktrackService.get_show_overview_chart() == "yes"
     span: str = request.args.get("span")
     span = "1y" if span is None else span
 
@@ -76,11 +90,9 @@ def wallets_overview():
         services=specter().service_manager.services,
         wallets_overview_vm=view_model,
         active_span=span,
-        chart=chart,
+        chart=chart if show_overview_chart else None,
         url_path="wallets_overview",
     )
-
-    return render_template("stacktrack/wallet/overview/wallets_overview.jinja")
 
 
 @stacktrack_endpoint.route("/wallet/<wallet_alias>/chart", methods=["GET"])
