@@ -11,3 +11,7 @@ prevent_mining
 .idea
 build/
 dist/
+src/cryptoadvance/specterext/stacktrack/_version.py
+.cirrus.yml
+coverage.xml
+.coverage
