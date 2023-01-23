@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "cryptoadvance.specter>=1.14.5", "setuptools", "setuptools-scm"
+    "cryptoadvance.specter>=1.14.5", "setuptools", "setuptools-scm", "pytest", "pytest-cov[all]"
 ]
 build-backend = "setuptools.build_meta"
 

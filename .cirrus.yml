@@ -8,8 +8,9 @@ test_task:
     - pip3 install -e .
     #- python3 setup.py install
     - echo $PATH
-    - pytest
-    - pytest --cov=cryptoadvance --junitxml=./testresults.xml
+    - coverage run -m pytest
+    - coverage report
+    - coverage xml
   always:
     junit_artifacts:
       path: "./testresults.xml"
