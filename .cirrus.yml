@@ -5,13 +5,11 @@ test_task:
   pip_script:
     - virtualenv --python=python3 .env 
     - source ./.env/bin/activate
-    - pip3 install -e .
-    #- python3 setup.py install
-    - echo $PATH
-    - coverage run -m pytest
+    - pip3 install -e ".[test]"
+    - pytest --cov=src
+    - coverage html
     - coverage report
-    - coverage xml
   always:
     junit_artifacts:
-      path: "./testresults.xml"
-      format: junit 
+      path: "./htmlcov"
+      type: text/html 
