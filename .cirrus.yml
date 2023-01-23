@@ -5,12 +5,11 @@ test_task:
   pip_script:
     - virtualenv --python=python3 .env 
     - source ./.env/bin/activate
-    - pip3 install $(cat pyproject.toml| grep cryptoadvance.specter | sed -e 's/"//g')
-    - pip3 install -r requirements.txt
-    - python3 setup.py install
     - pip3 install -e .
+    #- python3 setup.py install
     - echo $PATH
-    - pytest #--cov=cryptoadvance --junitxml=./testresults.xml
+    - pytest
+    - pytest --cov=cryptoadvance --junitxml=./testresults.xml
   always:
     junit_artifacts:
       path: "./testresults.xml"
