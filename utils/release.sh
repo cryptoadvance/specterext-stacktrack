@@ -52,14 +52,6 @@ case $key in
     shift
     shift
     ;;
-    set)
-    SET="yes"
-    shift
-    ;;
-    commit)
-    COMMIT="yes"
-    shift
-    ;;
     tag)
     TAG="yes"
     shift
@@ -186,9 +178,6 @@ function main() {
         exit 0
     fi
 
-    if [[ -n "$SET" ]]; then
-        set
-    fi
     if [[ -n "$COMMIT" ]]; then
         commit
     fi
@@ -207,13 +196,6 @@ function main() {
 
 }
 
-function set() {
-    echo "    --> set the correct version in the setup.py"
-    new_version_pypi_comp=$(echo $new_version | sed 's/v//')
-    sed -i "s/version=.*/version=\"$new_version_pypi_comp\",/" setup.py
-    echo "    --> result:"
-    cat setup.py | grep version
-}
 
 function commit() {
     if ! git status --porcelain | grep setup.py ; then
