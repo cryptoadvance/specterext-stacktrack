@@ -1,12 +1,11 @@
 [build-system]
 requires = [
-    "cryptoadvance.specter>=1.14.5"
+    "cryptoadvance.specter>=1.14.5", "setuptools", "setuptools-scm"
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "specterext_stacktrack"
-version = "0.1.1"
 
 authors = [
   { name="Wombat6"},
@@ -29,6 +28,10 @@ classifiers =[
     'License :: OSI Approved :: MIT License',
     'Operating System :: OS Independent',
 ]
+dynamic=["version"]
+
+[tool.setuptools_scm]
+write_to = "src/cryptoadvance/specterext/stacktrack/_version.py"
 
 [project.optional-dependencies]
 test = [

@@ -11,3 +11,4 @@ prevent_mining
 .idea
 build/
 dist/
+src/cryptoadvance/specterext/stacktrack/_version.py

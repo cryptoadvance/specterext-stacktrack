@@ -248,9 +248,8 @@ function publish() {
 }
 
 function release() {
-    set
-    commit
     tag
+    git checkout $new_version 
     build
     publish
 }
