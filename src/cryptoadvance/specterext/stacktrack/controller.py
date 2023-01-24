@@ -63,21 +63,19 @@ def settings_post():
 @login_required
 def wallets_overview():
     show_overview_chart = StacktrackService.get_show_overview_chart() == "yes"
-    span: str = request.args.get("span")
-    span = "1y" if span is None else span
-
-    specter().check_blockheight()
-
-    # Replace the default tx table with one that includes a chart.
-    view_model = WalletsOverviewVm()
-    view_model.tx_table_include = "stacktrack/wallet/overview/overview_chart_and_tx_table.jinja"
-
-    wallets: list[Wallet] = list(specter().wallet_manager.wallets.values())
-    for wallet in wallets:
-        wallet.update_balance()
-        wallet.check_utxo()
-    txs: list = _extract_txs(wallets)
     try:
+        span: str = request.args.get("span")
+        span = "1y" if span is None else span
+        specter().check_blockheight()
+        # Replace the default tx table with one that includes a chart.
+        view_model = WalletsOverviewVm()
+        view_model.tx_table_include = "stacktrack/wallet/overview/overview_chart_and_tx_table.jinja"
+
+        wallets: list[Wallet] = list(specter().wallet_manager.wallets.values())
+        for wallet in wallets:
+            wallet.update_balance()
+            wallet.check_utxo()
+        txs: list = _extract_txs(wallets)
         chart: go.Figure = plot.build_chart(span, txs)
     except Exception as e:
         logger.exception(e)
