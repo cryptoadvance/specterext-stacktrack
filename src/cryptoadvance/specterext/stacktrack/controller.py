@@ -1,7 +1,7 @@
 import logging
 import random
 
-from flask import current_app as app, render_template, request, redirect, url_for
+from flask import current_app as app, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 import plotly.graph_objects as go
 
@@ -63,24 +63,23 @@ def settings_post():
 @login_required
 def wallets_overview():
     show_overview_chart = StacktrackService.get_show_overview_chart() == "yes"
-    span: str = request.args.get("span")
-    span = "1y" if span is None else span
-
-    specter().check_blockheight()
-
-    # Replace the default tx table with one that includes a chart.
-    view_model = WalletsOverviewVm()
-    view_model.tx_table_include = "stacktrack/wallet/overview/overview_chart_and_tx_table.jinja"
-
-    wallets: list[Wallet] = list(specter().wallet_manager.wallets.values())
-    for wallet in wallets:
-        wallet.update_balance()
-        wallet.check_utxo()
-    txs: list = _extract_txs(wallets)
     try:
+        span: str = request.args.get("span")
+        span = "1y" if span is None else span
+        specter().check_blockheight()
+        # Replace the default tx table with one that includes a chart.
+        view_model = WalletsOverviewVm()
+        view_model.tx_table_include = "stacktrack/wallet/overview/overview_chart_and_tx_table.jinja"
+
+        wallets: list[Wallet] = list(specter().wallet_manager.wallets.values())
+        for wallet in wallets:
+            wallet.update_balance()
+            wallet.check_utxo()
+        txs: list = _extract_txs(wallets)
         chart: go.Figure = plot.build_chart(span, txs)
     except Exception as e:
         logger.exception(e)
+        flash("(Probably) Due to https://github.com/cryptoadvance/specterext-stacktrack/issues/12 the chart is not available for unconfirmed transactions in the wallet-overview. Check the logs for details", "error")
         chart = None
 
     return render_template(
@@ -98,10 +97,16 @@ def wallets_overview():
 @stacktrack_endpoint.route("/wallet/<wallet_alias>/chart", methods=["GET"])
 @login_required
 def stacktrack_wallet_chart(wallet_alias: str) -> str:
-    span: str = request.args.get("span")
-    span = "1y" if span is None else span
-    wallet: Wallet = app.specter.wallet_manager.get_by_alias(wallet_alias)
-    chart: go.Figure = plot.build_chart(span, wallet.txlist())
+    try:
+        span: str = request.args.get("span")
+        span = "1y" if span is None else span
+        wallet: Wallet = app.specter.wallet_manager.get_by_alias(wallet_alias)
+        chart: go.Figure = plot.build_chart(span, wallet.txlist())
+    except Exception as e:
+        logger.exception(e)
+        flash("There was an error while creating the chart. See the logs for details", "error")
+        chart = None
+
     return render_template(
         "stacktrack/wallet/chart/wallet_chart.jinja",
         wallet_alias=wallet_alias,
