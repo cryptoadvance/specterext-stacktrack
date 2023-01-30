@@ -17,6 +17,7 @@ $ source .env/bin/activate
 $ pip3 install -r requirements.txt
 $ pip3 install -e .
 $ python3 setup.py install
+$ pip3 install cryptoadvance.specter
 $ python3 -m cryptoadvance.specter server --config DevelopmentConfig --debug
 ```
 
