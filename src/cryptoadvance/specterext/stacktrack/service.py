@@ -64,12 +64,7 @@ class StacktrackService(Service):
         if type(view_model) == WalletsOverviewVm:
             # Redirect to our custom StackTrack controller so we can generate a chart.
             view_model.wallets_overview_redirect = url_for("stacktrack_endpoint.wallets_overview")
-        else:
-            return None
         return view_model
-
-    # There might be other callbacks you're interested in. Check the callbacks.py in the specter-desktop source.
-    # if you are, create a method here which is "callback_" + callback_id
 
     @classmethod
     def get_show_overview_chart(cls) -> str:
