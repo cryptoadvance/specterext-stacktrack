@@ -124,6 +124,9 @@ def _extract_txs(wallets: list) -> list:
     txs: list = []
     for wallet in wallets:
         txs = txs + wallet.txlist()
+        
+    # Filter out unconfirmed transactions (where blockheight is None)
+    confirmed_txs = [tx for tx in txs if tx["blockheight"] is not None]
 
     # Reverse sort, like wallets do
-    return sorted(txs, key=lambda d: d["blockheight"], reverse=True)
+    return sorted(confirmed_txs, key=lambda d: d["blockheight"], reverse=True)
